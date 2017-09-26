@@ -1,0 +1,110 @@
+---
+# Set Facts
+
+# All dev roles assume this jupyter project root
+- name: Set Jupyter project root
+  set_fact:
+    jupyter_root: "/home/vagrant"
+
+- name: Set Jupyter virtualenv path
+  set_fact:
+    jupyter_venv: "{{ jupyter_root }}/venv-jupyter"
+
+
+# Install Dependencies
+- block:
+  - name: Install git
+    yum:
+      name: git
+      state: latest
+
+  - name: Install gcc-c++
+    yum:
+      name: gcc-c++
+      state: latest
+
+  - name: Install make
+    yum:
+      name: make
+      state: latest
+
+  - name: Install bzip2
+    yum:
+      name: bzip2
+      state: latest
+
+  - name: Install http-parser-devel
+    yum:
+      name: http://springdale.math.ias.edu/data/puias/unsupported/7/x86_64//http-parser-2.7.1-3.sdl7.x86_64.rpm
+      state: present
+
+  - name: Install nodejs
+    yum:
+      name: nodejs
+      update_cache: yes
+      state: latest
+
+  - name: Install npm
+    yum:
+      name: npm
+      update_cache: yes
+      state: latest
+
+  - name: Install Python 3.4
+    yum:
+      name: python34-devel
+      state: latest
+
+  - name: Install pip-3.4
+    yum:
+      name: python34-pip
+      state: latest
+
+  - name: Update virtualenv
+    pip:
+      executable: pip3
+      name: virtualenv
+      extra_args: --upgrade
+
+  - name: Install configurable-http-proxy
+    npm:
+      name: configurable-http-proxy
+      global: yes
+
+# Install Jupyterhub
+- block:
+  - name: Install JupyterHub
+    pip:
+      virtualenv: "{{ jupyter_venv }}"
+      virtualenv_python: python3.4
+      name: jupyterhub
+      version: 0.7.2
+      editable: true
+
+  - name: Update notebooks
+    pip:
+      virtualenv: "{{ jupyter_venv }}"
+      extra_args: --upgrade
+      name: notebook
+
+  - name: Install wrapspawner
+    pip:
+      virtualenv: "{{ jupyter_venv }}"
+      virtualenv_python: python3.4
+      name: git+git://github.com/jupyterhub/wrapspawner.git@master
+      editable: false
+
+  - name: Install Singularity Spawner
+    pip:
+      virtualenv: "{{ jupyter_venv }}"
+      virtualenv_python: python3.4
+      name: git+git://github.com/ResearchComputing/jupyterhub-singularity-spawner.git@master
+      editable: false
+
+  - name: Render jupyterhub config
+    template:
+      src: jupyterhub_config.py.j2
+      dest: "{{ jupyter_root }}/jupyterhub_config.py"
+
+  become: yes
+  become_user: vagrant

@@ -1,0 +1,24 @@
+---
+
+- name: install the 'Development tools' package group
+  yum:
+    name: "@Development tools"
+    state: present
+
+- name: clone source
+  git:
+    repo: https://github.com/singularityware/singularity.git
+    dest: "{{ singularity_build_path }}"
+    version: "{{ singularity_version }}"
+
+- name: autogen
+  command: ./autogen.sh chdir={{ singularity_build_path }}
+
+- name: configure
+  command: ./configure --prefix={{ singularity_install_path }} --sysconfdir={{ singularity_config_path }} chdir={{ singularity_build_path }}
+
+- name: make
+  command: make chdir={{ singularity_build_path }}
+
+- name: install
+  command: make install chdir={{ singularity_build_path }}

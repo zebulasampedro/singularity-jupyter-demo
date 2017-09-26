@@ -1,0 +1,15 @@
+---
+
+- name: Install git
+  yum:
+    name: git
+    state: latest
+
+
+- name: Clone singularity-jupyter-demo
+  git:
+    repo: https://github.com/zebulasampedro/singularity-jupyter-demo.git
+    dest: "/home/vagrant/singularity-jupyter-demo"
+  become: yes
+  become_user: vagrant
+
