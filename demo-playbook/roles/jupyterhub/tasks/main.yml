@@ -87,6 +87,15 @@
       extra_args: --upgrade
       name: notebook
 
+  - name: Install BASH kernel
+    pip:
+      virtualenv: "{{ jupyter_venv }}"
+      virtualenv_python: python3.4
+      name: bash_kernel
+
+  - name: Configure BASH kernel
+    shell: source {{ jupyter_venv }}/bin/activate && python -m bash_kernel.install
+
   - name: Install wrapspawner
     pip:
       virtualenv: "{{ jupyter_venv }}"
