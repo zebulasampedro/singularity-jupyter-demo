@@ -1,2 +1,4 @@
 .vagrant/
+.ipynb_checkpoints/
 *.retry
+*.img
