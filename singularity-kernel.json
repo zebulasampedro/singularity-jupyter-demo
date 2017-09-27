@@ -1,13 +1,15 @@
-"argv": [
-  "singularity",
-  "exec",
-  "-e",
-  "python",
-  "-m",
-  "ipykernel_launcher",
-  "-f",
-  "{connection_file}"
- ],
- "display_name": "Singularity + Seaborn",
- "language": "python"
+{
+    "argv": [
+        "singularity",
+        "exec",
+        "-e",
+        "/home/vagrant/singularity-jupyter-demo/jupyter-bootstrapped.img",
+        "python",
+        "-m",
+        "ipykernel_launcher",
+        "-f",
+        "{connection_file}"
+     ],
+     "display_name": "Singularity + Seaborn",
+     "language": "python"
 }
