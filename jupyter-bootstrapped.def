@@ -1,0 +1,6 @@
+BootStrap: docker
+From: jupyter/base-notebook
+
+%post
+  echo "Installing seaborn..."
+  pip3 install seaborn
